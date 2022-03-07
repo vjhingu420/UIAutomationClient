@@ -1,0 +1,45 @@
+Sub cAuto()
+
+    Dim cAuto As New CUIAutomation
+    
+    Dim cDesktop As IUIAutomationElement
+    Set cDesktop = cAuto.GetRootElement
+    
+    Dim iAutoAndCond As IUIAutomationAndCondition
+    Dim iAutoCond As IUIAutomationCondition
+    
+    Dim cApp As IUIAutomationElement
+    Dim cWinPattern As IUIAutomationWindowPattern
+    
+    Dim appName As String: appName = "Notepad"
+    
+    Set iAutoCond1 = cAuto.CreatePropertyCondition( _
+        UIA_ControlTypePropertyId, _
+        UIA_WindowControlTypeId _
+    )
+    
+    Set iAutoCond2 = cAuto.CreatePropertyCondition( _
+        UIA_ClassNamePropertyId, _
+        appName _
+    )
+    
+    'Type and Name Condition
+    Set iAutoAndCond = cAuto.CreateAndCondition( _
+        iAutoCond1, _
+        iAutoCond2 _
+    )
+    
+    Set cApp = cDesktop.FindFirst(TreeScope_Children, iAutoAndCond)
+
+'    Dim cApps As IUIAutomationElementArray
+'    Set cApps = cDesktop.FindAll(TreeScope_Children, iAutoAndCond)
+'    For sElem = 0 To cApps.Length - 1
+'        MsgBox cApps.GetElement(sElem).CurrentName
+'    Next
+    
+    If Not (cApp Is Nothing) Then
+        Set cWinPattern = cApp.GetCurrentPattern(UIA_WindowPatternId)
+        cWinPattern.SetWindowVisualState WindowVisualState.WindowVisualState_Maximized
+    End If
+
+End Sub
